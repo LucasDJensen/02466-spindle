@@ -1,6 +1,5 @@
 import sys
 
-from globals import HPC_STORAGE_PATH
 
 sys.path.append("..")
 import tensorflow as tf
@@ -12,6 +11,7 @@ from metrics import *
 # from tools import *
 import pickle
 import os
+from globals import HPC_STORAGE_PATH
 
 # plt.ion()
 

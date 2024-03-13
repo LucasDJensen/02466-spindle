@@ -1,6 +1,5 @@
 import sys
 
-from globals import HPC_STORAGE_PATH
 
 sys.path.append("..")
 from tensorflow.keras.layers import Input, MaxPool2D, Conv2D, Dense, Softmax, Flatten, Dropout
@@ -8,6 +7,7 @@ from metrics import *
 from tools import *
 # from hmm import *
 from kornum_data_loading import SequenceDataset
+from globals import HPC_STORAGE_PATH
 
 
 save_path = os.path.join(HPC_STORAGE_PATH, 'results_spindle')
