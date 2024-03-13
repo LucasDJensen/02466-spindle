@@ -1,4 +1,7 @@
 import sys
+
+from globals import HPC_STORAGE_PATH
+
 sys.path.append("..")
 import tensorflow as tf
 import sklearn.metrics

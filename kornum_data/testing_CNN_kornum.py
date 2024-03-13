@@ -1,4 +1,7 @@
 import sys
+
+from globals import HPC_STORAGE_PATH
+
 sys.path.append("..")
 from tensorflow.keras.layers import Input, MaxPool2D, Conv2D, Dense, Softmax, Flatten, Dropout
 from metrics import *
