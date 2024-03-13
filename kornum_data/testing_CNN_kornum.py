@@ -1,16 +1,16 @@
 import sys
 sys.path.append("..")
 from tensorflow.keras.layers import Input, MaxPool2D, Conv2D, Dense, Softmax, Flatten, Dropout
-from SPINDLE.metrics import *
-from SPINDLE.tools import *
+from metrics import *
+from tools import *
 # from hmm import *
 from kornum_data_loading import SequenceDataset
 
 
-save_path = '/Users/tlj258/results_spindle'
+save_path = os.path.join(HPC_STORAGE_PATH, 'results_spindle')
 model_name = 'A_4'
 
-data_path = '/Users/tlj258/preprocessed_spindle_data/kornum'
+data_path = os.path.join(HPC_STORAGE_PATH, 'preprocessed_spindle_data/kornum')
 csv_path = os.path.dirname(data_path) + '/labels_all.csv'
 
 BATCH_SIZE = 300

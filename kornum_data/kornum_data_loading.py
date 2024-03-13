@@ -8,7 +8,7 @@ import mne
 import pathlib
 from spindle_data.spindle_data_loading import windowing, load_raw_recording
 import tensorflow as tf
-from SPINDLE.final_preprocessing import preprocess_EEG, preprocess_EMG
+from final_preprocessing import preprocess_EEG, preprocess_EMG
 
 
 def get_tsv_filepaths(folder_path):

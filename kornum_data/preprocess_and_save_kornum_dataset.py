@@ -6,11 +6,13 @@ import string
 import random
 import pandas as pd
 import numpy as np
+from globals import HPC_STORAGE_PATH
 
 # WARNING!!!! MAKE SURE THE DESTINATION FOLDER IS NOT WITHIN ONEDRIVE OR ANY OTHER BACKUP SYSTEM, IT WILL MAKE IT COLLAPSE
 
-dataset_folder = '/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/EEGdata_cleaned'
-destination_folder = '/Users/tlj258/preprocessed_spindle_data/kornum' # needs to be an empty  directory 
+dataset_folder = os.path.join(HPC_STORAGE_PATH, 'EEGdata_cleaned')
+destination_folder = os.path.join(HPC_STORAGE_PATH,'preprocessed_spindle_data/kornum') # needs to be an empty  directory
+
 if not os.path.exists(destination_folder):
     os.makedirs(destination_folder)
 elif len(os.listdir(destination_folder)) != 0:

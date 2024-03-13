@@ -1,16 +1,17 @@
 import sys
+from globals import HPC_STORAGE_PATH
 sys.path.append("..")
 from tensorflow.keras.layers import Input, MaxPool2D, Conv2D, Dense, Softmax, Flatten, Dropout
-from SPINDLE.metrics import *
-from SPINDLE.tools import *
+from metrics import *
+from tools import *
 # from hmm import *
 from spindle_data_loading import SequenceDataset, SequenceDataset2, load_to_dataset
 
 
-save_path = '/Users/tlj258/results_spindle'
+save_path = os.path.join(HPC_STORAGE_PATH,'results_spindle')
 model_name = 'A_5'
 
-data_path = '/Users/tlj258/preprocessed_spindle_data/spindle'
+data_path = os.path.join(HPC_STORAGE_PATH,'preprocessed_spindle_data/spindle')
 csv_path = os.path.dirname(data_path) + '/labels_all.csv'
 
 BATCH_SIZE = 300
@@ -21,7 +22,7 @@ LOSS_TYPE = 'weighted_ce' # 'weighted_ce' or 'normal_ce'
 # -------------------------------------------------------------------------------------------------------------------------
 
 if ARTIFACT_DETECTION==False:
-    JUST_ARTIFACT_LABELS = False 
+    JUST_ARTIFACT_LABELS = False
     last_activation = 'softmax'
     if JUST_NOT_ART_EPOCHS==False:
         NCLASSES_MODEL = 4
@@ -32,7 +33,7 @@ if ARTIFACT_DETECTION==False:
     metrics_list = [tf.keras.metrics.CategoricalAccuracy(),
                    MulticlassF1Score(n_classes=NCLASSES_MODEL),
                    MulticlassBalancedAccuracy(n_classes=NCLASSES_MODEL)]
-    
+
     if LOSS_TYPE=='weighted_ce':
         loss=MulticlassWeightedCrossEntropy_2(n_classes=NCLASSES_MODEL)
     elif LOSS_TYPE=='normal_ce':
@@ -41,13 +42,13 @@ if ARTIFACT_DETECTION==False:
 else:
     if JUST_NOT_ART_EPOCHS==True: raise Exception('If ARTIFACT_DETECTION=True, JUST_NOT_ART_EPOCHS must be False')
     JUST_ARTIFACT_LABELS = True
-    last_activation = 'sigmoid' 
+    last_activation = 'sigmoid'
     NCLASSES_MODEL = 1
 
     metrics_list=[tf.keras.metrics.BinaryAccuracy(),
                 BinaryBalancedAccuracy(),
                 BinaryF1Score()]
-    
+
     if LOSS_TYPE=='weighted_ce':
         loss=BinaryWeightedCrossEntropy()
     elif LOSS_TYPE=='normal_ce':
@@ -88,7 +89,7 @@ spindle_model.compile(optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=5 
                       metrics=metrics_list)
 
 for i in range(len(test_sequence)):
-    x_batch, y_batch = test_sequence.__getitem__(i)    
+    x_batch, y_batch = test_sequence.__getitem__(i)
     # _, y_batch_arts = test_sequence_arts.__getitem__(i)    
 
     if i == 0:

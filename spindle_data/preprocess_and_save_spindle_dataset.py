@@ -6,20 +6,21 @@ import string
 import random
 import pandas as pd
 import numpy as np
+from globals import HPC_STORAGE_PATH
 
 
 # WARNING!!!! MAKE SURE THE DESTINATION FOLDER IS NOT WITHIN ONEDRIVE OR ANY OTHER BACKUP SYSTEM, IT WILL MAKE IT COLLAPSE
 
 # dataset_folder = '/scratch/s202283/data/Laura-EEGdata_cleaned'
 # destination_folder = '/scratch/s202283/data/spindle_data/numpy'
-dataset_folder = '/Users/tlj258/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Documents/THESIS_DATA/SPINDLE/original_data/CohortA'
-destination_folder = '/Users/tlj258/preprocessed_spindle_data/spindle' # needs to be an empty  directory 
+dataset_folder = os.path.join(HPC_STORAGE_PATH, 'SPINDLE_DATA/data/CohortA')
+destination_folder = os.path.join(HPC_STORAGE_PATH, 'preprocessed_spindle_data/spindle')  # needs to be an empty  directory
 if not os.path.exists(destination_folder):
     os.makedirs(destination_folder)
 elif len(os.listdir(destination_folder)) != 0:
     raise Exception('Destination folder ' + destination_folder + ' is not empty')
-SCORER = 1
-COHORT = 'a'
+SCORER = 1 # TODO: first scorer = 1, second scorer = 2
+COHORT = 'a' # fixed cohort
 
 training_validation_labels = ['scorings/A1.csv',
                               'scorings/A2.csv']

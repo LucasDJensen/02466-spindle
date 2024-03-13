@@ -2,7 +2,7 @@ import mne
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from SPINDLE.final_preprocessing import preprocess_EEG, preprocess_EMG
+from final_preprocessing import preprocess_EEG, preprocess_EMG
 import string
 import os
 import scipy
