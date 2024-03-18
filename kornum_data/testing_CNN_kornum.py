@@ -1,7 +1,8 @@
+import os
 import sys
 
+sys.path.append(os.path.join(sys.path[0], ".."))
 
-sys.path.append("..")
 from tensorflow.keras.layers import Input, MaxPool2D, Conv2D, Dense, Softmax, Flatten, Dropout
 from metrics import *
 from tools import *
@@ -17,7 +18,7 @@ data_path = os.path.join(HPC_STORAGE_PATH, 'preprocessed_spindle_data/kornum')
 csv_path = os.path.dirname(data_path) + '/labels_all.csv'
 
 BATCH_SIZE = 300
-ARTIFACT_DETECTION = True # This will produce only artifact/not artifact labels
+ARTIFACT_DETECTION = False # This will produce only artifact/not artifact labels
 JUST_NOT_ART_EPOCHS = False # This will filter out the artifact epochs and keep only the non-artifacts. Can only be true if ARTIFACT_DETECTION=False.
 LOSS_TYPE = 'weighted_ce' # 'weighted_ce' or 'normal_ce'
 

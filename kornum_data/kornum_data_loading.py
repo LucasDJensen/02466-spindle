@@ -1,14 +1,14 @@
-import os 
-print(os.getcwd())
-
+import os
+import sys
 import pandas as pd
 import numpy as np
 import os.path
 import mne
 import pathlib
-from spindle_data.spindle_data_loading import windowing, load_raw_recording
 import tensorflow as tf
 from final_preprocessing import preprocess_EEG, preprocess_EMG
+from spindle_data.spindle_data_loading import windowing, load_raw_recording
+from globals import HPC_STORAGE_PATH
 
 
 def get_tsv_filepaths(folder_path):

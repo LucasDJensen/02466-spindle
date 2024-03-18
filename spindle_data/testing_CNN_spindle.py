@@ -1,5 +1,5 @@
 import sys
-sys.path.append("..")
+sys.path.append(os.path.join(sys.path[0], ".."))
 from tensorflow.keras.layers import Input, MaxPool2D, Conv2D, Dense, Softmax, Flatten, Dropout
 from metrics import *
 from tools import *
@@ -16,7 +16,7 @@ csv_path = os.path.dirname(data_path) + '/labels_all.csv'
 
 BATCH_SIZE = 300
 ARTIFACT_DETECTION = False # This will produce only artifact/not artifact labels
-JUST_NOT_ART_EPOCHS = True # This will filter out the artifact epochs and keep only the non-artifacts. Can only be true if ARTIFACT_DETECTION=False.
+JUST_NOT_ART_EPOCHS = False # This will filter out the artifact epochs and keep only the non-artifacts. Can only be true if ARTIFACT_DETECTION=False.
 LOSS_TYPE = 'weighted_ce' # 'weighted_ce' or 'normal_ce'
 
 # -------------------------------------------------------------------------------------------------------------------------

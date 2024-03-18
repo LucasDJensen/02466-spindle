@@ -1,5 +1,6 @@
 import sys
-sys.path.append("..")
+import os
+sys.path.append(os.path.join(sys.path[0], ".."))
 from spindle_data_loading import load_recording
 import os
 import string

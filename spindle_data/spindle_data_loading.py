@@ -1,7 +1,10 @@
+import os
+import sys
 import mne
 import pandas as pd
 import numpy as np
 import tensorflow as tf
+sys.path.append(os.path.join(sys.path[0], ".."))
 from final_preprocessing import preprocess_EEG, preprocess_EMG
 import string
 import os
