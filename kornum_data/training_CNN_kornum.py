@@ -22,7 +22,7 @@ csv_path = os.path.dirname(data_path) + '/labels_all.csv'
 
 BATCH_SIZE = 300
 TRAINING_EPOCHS = 5
-ARTIFACT_DETECTION = False # This will produce only artifact/not artifact labels
+ARTIFACT_DETECTION = True # This will produce only artifact/not artifact labels
 JUST_NOT_ART_EPOCHS = False # This will filter out the artifact epochs and keep only the non-artifacts. Can only be true if ARTIFACT_DETECTION=False.
 LOSS_TYPE = 'weighted_ce' # 'weighted_ce' or 'normal_ce'
 
