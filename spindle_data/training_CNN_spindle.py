@@ -1,27 +1,27 @@
+import os
 import sys
+
 sys.path.append(os.path.join(sys.path[0], ".."))
 import tensorflow as tf
-import sklearn.metrics
 # import random
 from tensorflow.keras.layers import Input, MaxPool2D, Conv2D, Dense, Flatten, Dropout
-from spindle_data_loading import SequenceDataset, SequenceDataset2, load_to_dataset
+from spindle_data_loading import SequenceDataset2
 from metrics import *
 # from tools import *
 import pickle
-import os
 from globals import HPC_STORAGE_PATH
 
 # plt.ion()
 
 save_path = os.path.join(HPC_STORAGE_PATH,'results_spindle')
-model_name = 'A_6'
+model_name = 'spindle_model'
 
 data_path = os.path.join(HPC_STORAGE_PATH,'preprocessed_spindle_data/spindle')
-csv_path = os.path.dirname(data_path) + '/labels_all.csv'
+csv_path = os.path.join(data_path, '..', 'spindle_labels_all.csv')
 
 BATCH_SIZE = 300
 TRAINING_EPOCHS = 5
-ARTIFACT_DETECTION = False # This will produce only artifact/not artifact labels
+ARTIFACT_DETECTION = True # This will produce only artifact/not artifact labels
 JUST_NOT_ART_EPOCHS = False # This will filter out the artifact epochs and keep only the non-artifacts. Can only be true if ARTIFACT_DETECTION=False.
 LOSS_TYPE = 'weighted_ce' # 'weighted_ce' or 'normal_ce'
 

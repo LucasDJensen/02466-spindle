@@ -15,10 +15,10 @@ from globals import HPC_STORAGE_PATH
 # plt.ion()
 
 save_path = os.path.join(HPC_STORAGE_PATH, 'results_spindle')
-model_name = 'A_3'
+model_name = 'kornum_model'
 
 data_path = os.path.join(HPC_STORAGE_PATH, 'preprocessed_spindle_data/kornum')
-csv_path = os.path.dirname(data_path) + '/labels_all.csv'
+csv_path = os.path.join(data_path, '..', 'kornum_labels_all.csv')
 
 BATCH_SIZE = 300
 TRAINING_EPOCHS = 5

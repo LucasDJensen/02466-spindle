@@ -1,5 +1,6 @@
 import os
 import sys
+
 sys.path.append(os.path.join(sys.path[0], ".."))
 import string
 import random
@@ -191,4 +192,7 @@ for i in range(len(validation_signals)):
 
     file_counter += 1
 
-df_all.to_csv(os.path.dirname(destination_folder) + '/labels_all.csv', index=False)
+labels_csv = os.path.join(destination_folder, '..', 'kornum_labels_all.csv')
+print(f'Saving labels to {labels_csv}')
+df_all.to_csv(labels_csv, index=False)
+print('Done.')
