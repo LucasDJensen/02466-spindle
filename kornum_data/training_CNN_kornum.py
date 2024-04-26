@@ -103,7 +103,9 @@ checkpoint_callback = MyCustomCallback(validation_dataset=val_sequence,
                                        evaluation_rate=int(len(train_sequence)/10),
                                        improvement_threshold=0.001,
                                        early_stopping_thr=10,
-                                       artifact_detection=ARTIFACT_DETECTION)
+                                       artifact_detection=ARTIFACT_DETECTION,
+                                       best_model_criteria='weighted_ce',
+                                       n_classes=NCLASSES_MODEL)
 
 spindle_model.compile(optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=5 * 1e-5,
                                                                 beta_1=0.9,
