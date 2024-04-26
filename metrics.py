@@ -1,6 +1,7 @@
 import tensorflow as tf
 import sklearn.metrics
 import os
+import numpy as np
 
 
 
@@ -465,17 +466,28 @@ class BinaryWeightedCrossEntropy(tf.keras.losses.Loss):
         # tf.print('ce_updated: ', ce)
         return ce
 
+
 class MyCustomCallback(tf.keras.callbacks.Callback):
-    def __init__(self, validation_dataset, save_checkpoint_path, evaluation_rate, improvement_threshold, early_stopping_thr, artifact_detection):
+    def __init__(self, validation_dataset, save_checkpoint_path, evaluation_rate, improvement_threshold, early_stopping_thr, artifact_detection, best_model_criteria, n_classes):
         self.validation_dataset = validation_dataset
         self.path = save_checkpoint_path
         self.evaluation_rate = evaluation_rate
-        self.best_bal_acc = 0
-        self.improvement_threshold = improvement_threshold
         self.counter = 0
         self.early_stopping_thr = early_stopping_thr
         self.history = []
         self.artifact_detection = artifact_detection
+        if best_model_criteria == 'weighted_ce':
+            self.best_wce = np.inf
+            if not artifact_detection:
+                self.wce_object = MulticlassWeightedCrossEntropy_2(n_classes=n_classes)
+            elif artifact_detection:
+                self.wce_object = BinaryWeightedCrossEntropy()
+        elif best_model_criteria == 'balanced_accuracy':
+            self.best_bal_acc = 0
+            self.improvement_threshold = improvement_threshold
+        else:
+            raise Exception("best_model_criteria must be either 'weighted_ce' or 'balanced_accuracy'")
+        self.best_model_criteria =  best_model_criteria
 
         if os.path.isfile(os.path.join(self.path, "validation_log.txt")):
             os.remove(os.path.join(self.path, "validation_log.txt"))
@@ -500,29 +512,47 @@ class MyCustomCallback(tf.keras.callbacks.Callback):
             y_true = tf.concat(y_true, axis=0)
             y_pred = tf.concat(y_pred, axis=0)
 
-            if not self.artifact_detection:
-                y_true = tf.math.argmax(y_true, axis=1)
-                y_pred = tf.math.argmax(y_pred, axis=1)
-            else:
-                y_pred = tf.where(y_pred>0.5, 1, 0)
-                y_true = tf.cast(y_true, tf.int32)
+            if self.best_model_criteria=='balanced_accuracy':
+                if not self.artifact_detection:
+                    y_true = tf.math.argmax(y_true, axis=1)
+                    y_pred = tf.math.argmax(y_pred, axis=1)
+                else:
+                    y_pred = tf.where(y_pred>0.5, 1, 0)
+                    y_true = tf.cast(y_true, tf.int32)
+            
+                bal_acc = sklearn.metrics.balanced_accuracy_score(y_true=y_true, y_pred=y_pred)
 
-            bal_acc = sklearn.metrics.balanced_accuracy_score(y_true=y_true, y_pred=y_pred)
+                print('Validation balanced accuracy: ', bal_acc)
 
-            print('Validation balanced accuracy: ', bal_acc)
+                with open(os.path.join(self.path, "validation_log.txt"), "a") as text_file:
+                    text_file.write("{:g} {:g} \n".format(batch, bal_acc))
+                # self.history.append(bal_acc)
 
-            with open(os.path.join(self.path, "validation_log.txt"), "a") as text_file:
-                text_file.write("{:g} {:g} \n".format(batch, bal_acc))
-            # self.history.append(bal_acc)
+                if bal_acc - self.best_bal_acc > self.improvement_threshold:
+                    self.best_bal_acc = bal_acc
+                    self.counter = 0
+                    print('BEST MODEL UPDATED')
 
-            if bal_acc - self.best_bal_acc > self.improvement_threshold:
-                self.best_bal_acc = bal_acc
-                self.counter = 0
-                print('BEST MODEL UPDATED')
+                    self.model.save_weights(os.path.join(self.path, "best_model.h5"))
+                else:
+                    self.counter += 1
 
-                self.model.save_weights(os.path.join(self.path, "best_model.h5"))
-            else:
-                self.counter += 1
+            elif self.best_model_criteria=='weighted_ce':
+                wce = self.wce_object(y_true=y_true, y_pred=y_pred)
+
+                print('Validation weighted_ce: ', wce.numpy())
+
+                with open(os.path.join(self.path, "validation_log.txt"), "a") as text_file:
+                    text_file.write("{:g} {:g} \n".format(batch, wce))
+
+                if wce < self.best_wce:
+                    self.best_wce = wce
+                    self.counter = 0
+                    print('BEST MODEL UPDATED')
+
+                    self.model.save_weights(os.path.join(self.path, "best_model.h5"))
+                else:
+                    self.counter += 1
         
         if self.counter >= self.early_stopping_thr:
             print('EARLY STOPPING ENABLED')

@@ -195,4 +195,4 @@ for i in range(len(validation_signals)):
 labels_csv = os.path.join(destination_folder, '..', 'kornum_labels_all.csv')
 print(f'Saving labels to {labels_csv}')
 df_all.to_csv(labels_csv, index=False)
-print('Done.')
+print('Preprocessing finished')
