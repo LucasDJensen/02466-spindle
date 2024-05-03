@@ -13,7 +13,7 @@ from globals import HPC_STORAGE_PATH
 
 # plt.ion()
 
-save_path = os.path.join(HPC_STORAGE_PATH,'results_spindle')
+save_path = os.path.join(HPC_STORAGE_PATH,'results_spindle_latent_space')
 model_name = 'spindle_model'
 
 data_path = os.path.join(HPC_STORAGE_PATH,'preprocessed_spindle_data/spindle')
@@ -21,8 +21,8 @@ csv_path = os.path.join(data_path, '..', 'spindle_labels_all.csv')
 
 BATCH_SIZE = 300
 TRAINING_EPOCHS = 5
-ARTIFACT_DETECTION = True # This will produce only artifact/not artifact labels
-JUST_NOT_ART_EPOCHS = False # This will filter out the artifact epochs and keep only the non-artifacts. Can only be true if ARTIFACT_DETECTION=False.
+ARTIFACT_DETECTION = False # This will produce only artifact/not artifact labels
+JUST_NOT_ART_EPOCHS = True # This will filter out the artifact epochs and keep only the non-artifacts. Can only be true if ARTIFACT_DETECTION=False.
 LOSS_TYPE = 'weighted_ce' # 'weighted_ce' or 'normal_ce'
 
 
