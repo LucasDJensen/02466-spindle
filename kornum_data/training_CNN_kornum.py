@@ -14,7 +14,7 @@ from globals import HPC_STORAGE_PATH
 
 # plt.ion()
 
-save_path = os.path.join(HPC_STORAGE_PATH, 'results_spindle_latent_space')
+save_path = os.path.join(HPC_STORAGE_PATH, 'results_spindle_latent_space_extract_embeddings')
 model_name = 'kornum_model'
 
 data_path = os.path.join(HPC_STORAGE_PATH, 'preprocessed_spindle_data/kornum')

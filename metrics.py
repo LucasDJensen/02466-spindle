@@ -534,6 +534,7 @@ class MyCustomCallback(tf.keras.callbacks.Callback):
                     print('BEST MODEL UPDATED')
 
                     self.model.save_weights(os.path.join(self.path, "best_model.h5"))
+                    self.model.save(os.path.join(self.path, "best_model_info.h5"))
                 else:
                     self.counter += 1
 
@@ -551,6 +552,7 @@ class MyCustomCallback(tf.keras.callbacks.Callback):
                     print('BEST MODEL UPDATED')
 
                     self.model.save_weights(os.path.join(self.path, "best_model.h5"))
+                    self.model.save(os.path.join(self.path, "best_model_info.h5"))
                 else:
                     self.counter += 1
         
