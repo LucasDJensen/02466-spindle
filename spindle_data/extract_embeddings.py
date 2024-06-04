@@ -10,7 +10,7 @@ from tensorflow.keras.utils import custom_object_scope
 from globals import HPC_STORAGE_PATH
 from spindle_data_loading import SequenceDataset2
 
-embedding_layer_name = 'dense_1'  # Change this to the layer before the classification layer
+embedding_layer_name = 'flatten'  # Change this to the layer before the classification layer
 
 # Define paths
 data_path = os.path.join(HPC_STORAGE_PATH, 'preprocessed_spindle_data/spindle')
@@ -212,20 +212,43 @@ if ARTIFACT_DETECTION == False:
     JUST_ARTIFACT_LABELS = False
 else:
     JUST_ARTIFACT_LABELS = True
+
+# Define your test dataset sequence similar to the training sequence
+validate_sequence = SequenceDataset2(data_folder=data_path,
+                                  csv_path=csv_path,
+                                  set='validate',
+                                  batch_size=BATCH_SIZE,
+                                  just_not_art_epochs=JUST_NOT_ART_EPOCHS,
+                                  just_artifact_labels=JUST_ARTIFACT_LABELS)
+
+# Extract embeddings from the test dataset
+validate_embeddings = embedding_model.predict(validate_sequence)
+
+# Save embeddings for later use
+validate_embeddings_path = os.path.join(checkpoint_path, 'validate_embeddings.pkl')
+with open(validate_embeddings_path, 'wb') as f:
+    pickle.dump(validate_embeddings, f)
+
 # Define your test dataset sequence similar to the training sequence
 test_sequence = SequenceDataset2(data_folder=data_path,
                                  csv_path=csv_path,
-                                 set='test',  # Adjust to the actual keyword for your test set
+                                 set='test',
                                  batch_size=BATCH_SIZE,
-                                 just_not_art_epochs=JUST_NOT_ART_EPOCHS,
-                                 just_artifact_labels=JUST_ARTIFACT_LABELS)
+                                 just_not_art_epochs=False,
+                                 just_artifact_labels=True)
+
+# for batch in test_sequence:
+#
+#     data, label = batch # something
+#     #TODO store data and label in a list
+#     break
 
 # Extract embeddings from the test dataset
-embeddings = embedding_model.predict(test_sequence)
+test_embeddings = embedding_model.predict(test_sequence)
 
 # Save embeddings for later use
-embeddings_path = os.path.join(checkpoint_path, 'embeddings.pkl')
-with open(embeddings_path, 'wb') as f:
-    pickle.dump(embeddings, f)
+test_embeddings_path = os.path.join(checkpoint_path, 'test_embeddings.pkl')
+with open(test_embeddings_path, 'wb') as f:
+    pickle.dump(test_embeddings, f)
 
 print('Embeddings extracted and saved successfully.')
