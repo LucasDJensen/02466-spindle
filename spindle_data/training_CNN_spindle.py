@@ -2,24 +2,21 @@ import os
 import sys
 
 sys.path.append(os.path.join(sys.path[0], ".."))
-import tensorflow as tf
-# import random
 from tensorflow.keras.layers import Input, MaxPool2D, Conv2D, Dense, Flatten, Dropout
 from spindle_data_loading import SequenceDataset2
 from metrics import *
-# from tools import *
 import pickle
-from globals import HPC_STORAGE_PATH
 
 # plt.ion()
-
-save_path = os.path.join(HPC_STORAGE_PATH,'results_spindle_latent_space_extract_embeddings')
+save_path = r'C:\Users\lucas\PycharmProjects\02466-spindle\extract_embeddings\kornum\results'
 model_name = 'spindle_model'
 
-data_path = os.path.join(HPC_STORAGE_PATH,'preprocessed_spindle_data/spindle')
-csv_path = os.path.join(data_path, '..', 'spindle_labels_all.csv')
+# data_path = os.path.join(HPC_STORAGE_PATH,'preprocessed_spindle_data/spindle')
+data_path = r'C:\Users\lucas\PycharmProjects\02466-spindle\extract_embeddings\kornum\data'
+# csv_path = os.path.join(data_path, '..', 'spindle_labels_all.csv')
+csv_path = r'C:\Users\lucas\PycharmProjects\02466-spindle\extract_embeddings\kornum\spindle_labels_all_small.csv'
 
-BATCH_SIZE = 300
+BATCH_SIZE = 1
 TRAINING_EPOCHS = 5
 ARTIFACT_DETECTION = False # This will produce only artifact/not artifact labels
 JUST_NOT_ART_EPOCHS = True # This will filter out the artifact epochs and keep only the non-artifacts. Can only be true if ARTIFACT_DETECTION=False.
@@ -30,7 +27,7 @@ LOSS_TYPE = 'weighted_ce' # 'weighted_ce' or 'normal_ce'
 # -------------------------------------------------------------------------------------------------------------------------
 
 if ARTIFACT_DETECTION==False:
-    JUST_ARTIFACT_LABELS = False 
+    JUST_ARTIFACT_LABELS = False
     last_activation = 'softmax'
     if JUST_NOT_ART_EPOCHS==False:
         NCLASSES_MODEL = 4
@@ -41,7 +38,7 @@ if ARTIFACT_DETECTION==False:
     metrics_list = [tf.keras.metrics.CategoricalAccuracy(),
                    MulticlassF1Score(n_classes=NCLASSES_MODEL),
                    MulticlassBalancedAccuracy(n_classes=NCLASSES_MODEL)]
-    
+
     if LOSS_TYPE=='weighted_ce':
         loss=MulticlassWeightedCrossEntropy_2(n_classes=NCLASSES_MODEL)
     elif LOSS_TYPE=='normal_ce':
@@ -50,13 +47,13 @@ if ARTIFACT_DETECTION==False:
 else:
     if JUST_NOT_ART_EPOCHS==True: raise Exception('If ARTIFACT_DETECTION=True, JUST_NOT_ART_EPOCHS must be False')
     JUST_ARTIFACT_LABELS = True
-    last_activation = 'sigmoid' 
+    last_activation = 'sigmoid'
     NCLASSES_MODEL = 1
 
     metrics_list=[tf.keras.metrics.BinaryAccuracy(),
                 BinaryBalancedAccuracy(),
                 BinaryF1Score()]
-    
+
     if LOSS_TYPE=='weighted_ce':
         loss=BinaryWeightedCrossEntropy()
     elif LOSS_TYPE=='normal_ce':
@@ -101,7 +98,7 @@ if not os.path.exists(checkpoint_path):
     os.makedirs(checkpoint_path, exist_ok=True)
 checkpoint_callback = MyCustomCallback(validation_dataset=val_sequence,
                                        save_checkpoint_path=checkpoint_path,
-                                       evaluation_rate=int(len(train_sequence)/10),
+                                       evaluation_rate=1,#int(len(train_sequence)/10),
                                        improvement_threshold=0.001,
                                        early_stopping_thr=10,
                                        artifact_detection=ARTIFACT_DETECTION,
