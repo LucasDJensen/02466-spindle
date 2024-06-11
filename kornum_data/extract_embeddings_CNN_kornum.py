@@ -2,6 +2,7 @@ import os
 import sys
 
 sys.path.append(os.path.join(sys.path[0], ".."))
+import pickle
 
 from tensorflow.keras.layers import Input, MaxPool2D, Conv2D, Dense, Flatten, Dropout
 from tensorflow.keras.models import Model
@@ -13,8 +14,9 @@ from globals import HPC_STORAGE_PATH
 
 embedding_layer_name = 'dense_1'
 
-save_path = os.path.join(HPC_STORAGE_PATH, 'results_spindle_latent_space')
+save_path = os.path.join(HPC_STORAGE_PATH, 'results_spindle_latent_space_extract_embeddings')
 model_name = 'kornum_model'
+embeddings_path = os.path.join(save_path, model_name, 'embeddings')
 
 data_path = os.path.join(HPC_STORAGE_PATH, 'preprocessed_spindle_data/kornum')
 csv_path = os.path.join(data_path, '..', 'kornum_labels_all.csv')
@@ -137,3 +139,23 @@ for i in range(len(test_sequence)):
 
 # save the true labels
 np.save(os.path.join(save_path, model_name, 'true_labels.npy'), y_true)
+print(f'y_true shape: {y_true.shape}')
+print('True labels saved')
+
+# Extract embeddings from the test dataset
+test_embeddings = embedding_model.predict(test_sequence)
+
+# Save embeddings for later use
+test_embeddings_path = os.path.join(embeddings_path, 'test_embeddings.pkl')
+with open(test_embeddings_path, 'wb') as f:
+    pickle.dump(test_embeddings, f)
+
+print('Test embeddings saved')
+
+# Extract embeddings from the test dataset
+validation_embeddings = embedding_model.predict(validation_sequence)
+
+# Save embeddings for later use
+validation_embeddings_path = os.path.join(embeddings_path, 'validation_embeddings.pkl')
+with open(validation_embeddings_path, 'wb') as f:
+    pickle.dump(validation_embeddings, f)

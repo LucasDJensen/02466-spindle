@@ -1,6 +1,8 @@
 import os
 import sys
 
+from globals import HPC_STORAGE_PATH
+
 sys.path.append(os.path.join(sys.path[0], ".."))
 from tensorflow.keras.layers import Input, MaxPool2D, Conv2D, Dense, Flatten, Dropout
 from spindle_data_loading import SequenceDataset2
@@ -8,15 +10,13 @@ from metrics import *
 import pickle
 
 # plt.ion()
-save_path = r'C:\Users\lucas\PycharmProjects\02466-spindle\extract_embeddings\kornum\results'
+save_path = os.path.join(HPC_STORAGE_PATH,'results_spindle_latent_space_extract_embeddings')
 model_name = 'spindle_model'
 
-# data_path = os.path.join(HPC_STORAGE_PATH,'preprocessed_spindle_data/spindle')
-data_path = r'C:\Users\lucas\PycharmProjects\02466-spindle\extract_embeddings\kornum\data'
-# csv_path = os.path.join(data_path, '..', 'spindle_labels_all.csv')
-csv_path = r'C:\Users\lucas\PycharmProjects\02466-spindle\extract_embeddings\kornum\spindle_labels_all_small.csv'
+data_path = os.path.join(HPC_STORAGE_PATH,'preprocessed_spindle_data/spindle')
+csv_path = os.path.join(data_path, '..', 'spindle_labels_all.csv')
 
-BATCH_SIZE = 1
+BATCH_SIZE = 300
 TRAINING_EPOCHS = 5
 ARTIFACT_DETECTION = False # This will produce only artifact/not artifact labels
 JUST_NOT_ART_EPOCHS = True # This will filter out the artifact epochs and keep only the non-artifacts. Can only be true if ARTIFACT_DETECTION=False.
@@ -98,7 +98,7 @@ if not os.path.exists(checkpoint_path):
     os.makedirs(checkpoint_path, exist_ok=True)
 checkpoint_callback = MyCustomCallback(validation_dataset=val_sequence,
                                        save_checkpoint_path=checkpoint_path,
-                                       evaluation_rate=1,#int(len(train_sequence)/10),
+                                       evaluation_rate=int(len(train_sequence)/10),
                                        improvement_threshold=0.001,
                                        early_stopping_thr=10,
                                        artifact_detection=ARTIFACT_DETECTION,
