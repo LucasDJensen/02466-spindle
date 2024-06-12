@@ -17,6 +17,7 @@ embedding_layer_name = 'dense_1'
 save_path = os.path.join(HPC_STORAGE_PATH, 'results_spindle_latent_space_extract_embeddings')
 model_name = 'kornum_model'
 embeddings_path = os.path.join(save_path, model_name, 'embeddings')
+os.makedirs(embeddings_path, exist_ok=True)
 
 data_path = os.path.join(HPC_STORAGE_PATH, 'preprocessed_spindle_data/kornum')
 csv_path = os.path.join(data_path, '..', 'kornum_labels_all.csv')
@@ -68,7 +69,7 @@ print("Devices available: ", tf.config.list_physical_devices())
 
 validation_sequence = SequenceDataset(data_folder=data_path,
                                       csv_path=csv_path,
-                                      set='validate',
+                                      set='validation',
                                       batch_size=BATCH_SIZE,
                                       just_not_art_epochs=True,
                                       just_artifact_labels=False)
@@ -125,7 +126,7 @@ print(f'x_batch shape: {x_batch.shape}')
 print(f'y_batch shape: {y_batch.shape}')
 
 # Preallocate arrays for predictions and true labels
-y_true = np.empty((num_samples, y_batch.shape[1]))
+y_true = np.zeros((num_samples, y_batch.shape[1]))
 
 start_idx = 0
 for i in range(len(test_sequence)):
@@ -138,9 +139,21 @@ for i in range(len(test_sequence)):
     start_idx += batch_size
 
 # save the true labels
-np.save(os.path.join(save_path, model_name, 'true_labels.npy'), y_true)
+np.save(os.path.join(embeddings_path, 'true_labels.npy'), y_true)
 print(f'y_true shape: {y_true.shape}')
 print('True labels saved')
+
+
+# Extract embeddings from the test dataset
+validation_embeddings = embedding_model.predict(validation_sequence)
+
+# Save embeddings for later use
+validation_embeddings_path = os.path.join(embeddings_path, 'validation_embeddings.pkl')
+with open(validation_embeddings_path, 'wb') as f:
+    pickle.dump(validation_embeddings, f)
+
+print('Validation embeddings saved')
+
 
 # Extract embeddings from the test dataset
 test_embeddings = embedding_model.predict(test_sequence)
@@ -151,11 +164,3 @@ with open(test_embeddings_path, 'wb') as f:
     pickle.dump(test_embeddings, f)
 
 print('Test embeddings saved')
-
-# Extract embeddings from the test dataset
-validation_embeddings = embedding_model.predict(validation_sequence)
-
-# Save embeddings for later use
-validation_embeddings_path = os.path.join(embeddings_path, 'validation_embeddings.pkl')
-with open(validation_embeddings_path, 'wb') as f:
-    pickle.dump(validation_embeddings, f)
