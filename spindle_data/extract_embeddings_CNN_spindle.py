@@ -127,6 +127,7 @@ print(f'y_batch shape: {y_batch.shape}')
 
 # Preallocate arrays for predictions and true labels
 y_true = np.zeros((num_samples, y_batch.shape[1]))
+validation_embeddings = np.zeros((num_samples, 1000))
 
 start_idx = 0
 for i in range(len(test_sequence)):
@@ -135,6 +136,7 @@ for i in range(len(test_sequence)):
 
     # Insert the results into the preallocated arrays
     y_true[start_idx:start_idx + batch_size] = y_batch
+    validation_embeddings[start_idx:start_idx + batch_size] = embedding_model.predict(x_batch)
 
     start_idx += batch_size
 
@@ -145,7 +147,7 @@ print('True labels saved')
 
 
 # Extract embeddings from the test dataset
-validation_embeddings = embedding_model.predict(validation_sequence)
+# validation_embeddings = embedding_model.predict(validation_sequence)
 
 # Save embeddings for later use
 validation_embeddings_path = os.path.join(embeddings_path, 'validation_embeddings.pkl')
@@ -155,12 +157,12 @@ with open(validation_embeddings_path, 'wb') as f:
 print('Validation embeddings saved')
 
 
-# Extract embeddings from the test dataset
-test_embeddings = embedding_model.predict(test_sequence)
-
-# Save embeddings for later use
-test_embeddings_path = os.path.join(embeddings_path, 'test_embeddings.pkl')
-with open(test_embeddings_path, 'wb') as f:
-    pickle.dump(test_embeddings, f)
-
-print('Test embeddings saved')
+# # Extract embeddings from the test dataset
+# test_embeddings = embedding_model.predict(test_sequence)
+#
+# # Save embeddings for later use
+# test_embeddings_path = os.path.join(embeddings_path, 'test_embeddings.pkl')
+# with open(test_embeddings_path, 'wb') as f:
+#     pickle.dump(test_embeddings, f)
+#
+# print('Test embeddings saved')

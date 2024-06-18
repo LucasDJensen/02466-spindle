@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 from sklearn.metrics import roc_curve, roc_auc_score
 from sklearn.neighbors import KernelDensity
 
+from _globals import cur_dir
 from load_embeddings import normalized_validation_embeddings, normalized_test_embeddings, label_list_test_embeddings
 
 # Step 1: Load the embeddings
@@ -14,7 +15,7 @@ print(normalized_test_embeddings.shape)  # (176465, 1000)
 print(label_list_test_embeddings.shape)  # (176465,)
 print(label_list_test_embeddings.sum())  # 495
 
-model_filename = 'kde_model.joblib'
+model_filename = os.path.join(cur_dir, 'kde_model.joblib')
 
 # Step 2: Check if model file exists and load the model if it does, otherwise fit a new model
 if os.path.exists(model_filename):
