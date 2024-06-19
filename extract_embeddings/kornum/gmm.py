@@ -157,7 +157,8 @@ confusion_matrix_result = compute_confusion_matrix(label_list_test_embeddings, p
 # Optionally, visualize the confusion matrix using seaborn heatmap
 
 plt.figure(figsize=(8, 6))
-sns.heatmap(confusion_matrix_result, annot=True, fmt='d', cmap='Blues')
+labels = ["not art.", "art."]
+sns.heatmap(confusion_matrix_result, xticklabels=labels, yticklabels=labels, annot=True, fmt='d', cmap='Blues')
 plt.xlabel('Predicted Labels')
 plt.ylabel('True Labels')
 plt.title('Confusion Matrix')

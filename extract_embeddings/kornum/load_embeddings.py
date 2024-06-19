@@ -24,4 +24,4 @@ normalized_test_embeddings = np.divide(test_embeddings - mean, std + epsilon)
 
 file = os.path.join(cur_dir, 'embeddings/true_labels.npy')
 true_labels = np.asarray(np.load(file), dtype=np.int32)
-label_list_test_embeddings: np.ndarray = np.array([1 if x[-1] == 1 else 0 for x in true_labels])
+label_list_test_embeddings: np.ndarray = true_labels[:, -1]

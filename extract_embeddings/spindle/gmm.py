@@ -19,12 +19,11 @@ import seaborn as sns
 # Load the embeddings
 label_list_test_embeddings = label_list_test_embeddings[:len(normalized_test_embeddings)]
 print(normalized_validation_embeddings.shape)  # (5955, 1000)
-print(normalized_test_embeddings.shape)  # (43192, 1000)
-print(label_list_test_embeddings.shape)  # (43192,)
+print(normalized_test_embeddings.shape)  # (43200, 1000)
+print(label_list_test_embeddings.shape)  # (43200,)
 print(label_list_test_embeddings.sum())  # 11696
 model_filename = os.path.join(cur_dir, 'gmm_model.joblib')
 use_existing_model = True
-
 
 def gmm_bic_score(estimator, X):
     """Callable to pass to GridSearchCV that will use the BIC score."""
